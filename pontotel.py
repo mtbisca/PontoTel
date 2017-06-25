@@ -1,5 +1,6 @@
 import hug
 import requests
+import re
 
 @hug.local()
 def get_occurrences(url: hug.types.text, key_word: hug.types.text):
@@ -15,12 +16,11 @@ def get_occurrences(url: hug.types.text, key_word: hug.types.text):
     from bs4 import BeautifulSoup
     soup = BeautifulSoup(html_text, "lxml")
     for script in soup(["script", "style"]):
-        script.extract()    # rip it out
+        script.extract()
     text = soup.get_text()
 
-    # print(text) #for testing
-    # split text into iterable list of words
-    text = text.split()
+    # split text into iterable list of words without punctuation
+    text = re.split(r",|;|:|\W", text)
 
     # count keyword occurrences
     counter = 0
