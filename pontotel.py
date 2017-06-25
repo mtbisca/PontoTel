@@ -3,10 +3,12 @@ import requests
 import re
 
 @hug.local()
-def get_occurrences(url: hug.types.text, key_word: hug.types.text):
+def get_occurrences(url: hug.types.text, key_word: hug.types.text,
+case_sensitive=True):
     """
     Returns JSON containing number of occurrences of "key_word" in website
-    given by "url"
+    given by "url" with case sensitivity defined by optional argument
+    case_sensitive (True by default)
     """
     # get and decode web content
     content = requests.get(url).content
@@ -18,6 +20,11 @@ def get_occurrences(url: hug.types.text, key_word: hug.types.text):
     for script in soup(["script", "style"]):
         script.extract()
     text = soup.get_text()
+
+    # convert text and keyword to lowercase if case_sensitive = False
+    if not case_sensitive:
+        text = text.lower()
+        key_word = key_word.lower()
 
     # split text into iterable list of words without punctuation
     text = re.split(r",|;|:|\W", text)
