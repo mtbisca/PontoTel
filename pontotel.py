@@ -2,7 +2,7 @@ import hug
 import requests
 import re
 
-@hug.local()
+@hug.get()
 def get_occurrences(url: hug.types.text, key_word: hug.types.text,
 case_sensitive=True):
     """
